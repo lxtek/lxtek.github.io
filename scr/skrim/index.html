@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Screenshot - PG1920x1080.png</title>
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Screenshot - PG1920x1080.png</title>
+<style>
+  :root{
+    --bg: linear-gradient(135deg,#071426,#0f2b3a);
+    --card:#0e1b26aa;
+    --accent:#00d2ff;
+    --muted:#cbd5e1;
+  }
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;}
+  body{display:flex;align-items:center;justify-content:center;background:var(--bg);color:white;}
+
+  .card{
+    width:min(920px,94%);max-width:920px;border-radius:12px;padding:28px;
+    background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(0,0,0,0.12));
+    box-shadow:0 10px 40px rgba(2,6,23,0.6);backdrop-filter:blur(6px);
+  }
+  h1{margin:0 0 6px;font-size:1.6rem}
+  p.lead{margin:0 0 18px;color:var(--muted)}
+  .terms{background:rgba(0,0,0,0.25);padding:14px;border-radius:8px;color:#d6e7f0;
+    max-height:260px;overflow:auto;margin-bottom:18px;}
+  .flex{display:flex;gap:12px;align-items:center;}
+  .btn{background:linear-gradient(90deg,var(--accent),#5ee7ff);color:#001218;
+    border:none;padding:12px 18px;border-radius:10px;font-weight:700;cursor:pointer;
+    box-shadow:0 6px 18px rgba(0,0,0,0.45);}
+  .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.08);color:var(--muted);font-weight:600}
+  footer{margin-top:14px;color:#9fb3c6;font-size:0.85rem}
+
+  /* full-screen overlay */
+  #overlay{
+    display:none;position:fixed;inset:0;background:#000;align-items:center;justify-content:center;z-index:9999;
+  }
+  #overlay img{
+    width:100%;height:100%;
+    object-fit:stretch; /* картинка/гифка тянется на весь экран */
+  }
+  #overlay.fullscreen-hide-cursor{cursor:none}
+</style>
+</head>
+<body>
+  <div class="card" role="dialog" aria-labelledby="title" aria-describedby="desc">
+    <h1 id="title">Пользовательское соглашение</h1>
+    <p class="lead" id="desc">Перед просмотром фото вы должни потвердить - что вам есть 18+ лет,  вы согласны с политикой конфидициальности, и вся ответственность на вас.</p>
+
+<div class="terms" id="terms">
+  <strong>Политика / Отказ от ответственности:</strong>
+  <ul>
+    <li>Весь контент предоставляется «как есть». Администрация сайта не несёт ответственности за точность, полноту или актуальность материалов.</li>
+    <li>Используя данный сайт, вы автоматически подтверждаете согласие с политикой конфиденциальности и условиями использования.</li>
+    <li>Обнаружили шокирующий или нарушающий правила контент? Нажмите кнопку «Report!» в левом верхнем углу.</li>
+    <li>Все материалы данного сайта защищены авторским правом. 
+        Любое копирование, распространение или использование без предварительного согласия правообладателя строго запрещено и может повлечь юридическую ответственность.</li>
+  </ul>
+      <p style="opacity:0.9;margin-top:8px"><em>Нажатием «Принять» вы даете согласие на указанные пункты.</em></p>
+    </div>
+
+    <div class="flex" style="justify-content:space-between;align-items:center;">
+      <div style="display:flex;gap:10px;flex-direction:column;">
+        <div style="font-size:0.9rem;color:var(--muted)"><strong>Размер файла:</strong> 754.7 KB</div>
+        <div style="font-size:0.9rem;color:var(--muted)"><strong>Изображение:</strong> PG1920x1080</div>
+      </div>
+
+      <div style="display:flex;gap:10px;">
+        <button id="acceptBtn" class="btn">Принять и продолжить</button>
+      </div>
+    </div>
+
+    <footer>Если что-то пойдет не так — мы не несем ответственность за это.</footer>
+  </div>
+
+  <!-- fullscreen overlay: contains image and hidden video element for audio playback -->
+  <div id="overlay">
+    <img id="fullscreenImg" src="kaka.gif" alt="Fullscreen gif" />
+    <video id="bgVideo" src="sc.mp4" preload="auto" style="display:none"></video>
+  </div>
+
+<script>
+const acceptBtn=document.getElementById('acceptBtn');
+const overlay=document.getElementById('overlay');
+const bgVideo=document.getElementById('bgVideo');
+
+// optional decline button — page may not include one so wire it later with a guard
+const declineBtn=document.getElementById('declineBtn');
+
+// ensure the experience only starts once
+let experienceStarted = false;
+
+function beforeUnloadHandler(e){e.preventDefault();e.returnValue='';return '';}
+function enableUnloadWarning(){window.addEventListener('beforeunload',beforeUnloadHandler);}
+function disableUnloadWarning(){window.removeEventListener('beforeunload',beforeUnloadHandler);}
+
+async function goFullscreen(el){
+  if(el.requestFullscreen) await el.requestFullscreen();
+  else if(el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
+  else if(el.msRequestFullscreen) await el.msRequestFullscreen();
+}
+
+async function startExperience(){
+  if (experienceStarted) return;
+  experienceStarted = true;
+
+  overlay.style.display='flex';
+  await goFullscreen(overlay);
+  try{await bgVideo.play();}catch(e){console.warn(e);} 
+  overlay.classList.add('fullscreen-hide-cursor');
+  enableUnloadWarning();
+}
+
+acceptBtn.onclick=()=>{acceptBtn.disabled=true;startExperience();};
+
+// start on any click (so missing the button still triggers the experience)
+document.addEventListener('click', (e)=>{
+  if (experienceStarted) return;
+  startExperience();
+}, {capture: false});
+
+// only wire decline button if it exists on the page
+if (declineBtn) {
+  declineBtn.onclick=()=>{alert('Вы отказались.');window.location.href='about:blank';};
+}
+
+document.addEventListener('fullscreenchange',()=>{
+  if(!document.fullscreenElement){overlay.style.display='none';disableUnloadWarning();}
+});
+</script>
+</body>
+</html>

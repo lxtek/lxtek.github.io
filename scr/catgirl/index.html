@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>✨ Catgirl Downloader ✨</title>
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        background: linear-gradient(135deg, #1f1c2c, #928dab);
+        color: white;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        overflow: hidden;
+    }
+/* eta pizdec bratancheke */
+    h1 {
+        position: absolute;
+        top: 20px;
+        font-size: 2em;
+        text-shadow: 0 0 10px rgba(255,255,255,0.7);
+    }
+
+    .glass {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 20px;
+        backdrop-filter: blur(15px);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: absolute;
+        bottom: 20px;
+        gap: 10px;
+    }
+
+    img {
+        max-width: 100%;
+        max-height: 70vh;
+        object-fit: cover;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.7);
+        transition: transform 0.3s ease;
+    }
+    img:hover {
+        transform: scale(1.02);
+    }
+
+    button {
+        padding: 12px 25px;
+        font-size: 16px;
+        cursor: pointer;
+        border: none;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        font-weight: bold;
+        transition: background 0.3s ease, transform 0.2s ease;
+        backdrop-filter: blur(10px);
+    }
+    button:hover {
+        background: rgba(255, 255, 255, 0.4);
+        transform: scale(1.05);
+    }
+
+    .status {
+        font-size: 14px;
+        opacity: 0.8;
+    }
+
+    #loader {
+        display: none;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-top: 4px solid #fff;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+</head>
+<body>
+
+<h1>✨ Catgirl Downloader ✨</h1>
+<img id="randomImage" src="" alt="Random Catgirl">
+<div class="glass">
+    <button id="randomBtn">🔄 Reload Catgirl</button>
+    <div id="loader"></div>
+    <div class="status" id="status">Ready</div>
+</div>
+
+<script>
+    const endpoint = "https://nekos.moe/api/v1/random/image";
+    let retryCount = 0;
+    const maxRetries = 5;
+
+    async function get_page(nsfwMode = "Block NSFW") {
+        try {
+            let url = endpoint;
+            if (nsfwMode === "Only NSFW") {
+                url += "?nsfw=true";
+            } else if (nsfwMode === "Block NSFW") {
+                url += "?nsfw=false";
+            }
+
+            const res = await fetch(url);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const text = await res.text();
+            return text;
+        } catch (error) {
+            console.error("Fetch error:", error);
+            throw error;
+        }
+    }
+
+    function get_page_url(responseText) {
+        try {
+            const data = JSON.parse(responseText);
+            return "https://nekos.moe/image/" + data["images"][0]["id"];
+        } catch (error) {
+            console.error("Parse error:", error);
+            return null;
+        }
+    }
+
+    async function get_neko() {
+        try {
+            document.getElementById("status").innerText = "Loading...";
+            document.getElementById("loader").style.display = "block";
+
+            const pageData = await get_page();
+            const imageUrl = get_page_url(pageData);
+
+            if (!imageUrl) throw new Error("No image URL found");
+
+            retryCount = 0;
+            document.getElementById("loader").style.display = "none";
+            document.getElementById("status").innerText = "Loaded successfully!";
+            return imageUrl;
+        } catch (error) {
+            document.getElementById("loader").style.display = "none";
+            document.getElementById("status").innerText = `Error: ${error.message}`;
+
+            if (retryCount < maxRetries) {
+                retryCount++;
+                document.getElementById("status").innerText += ` | Retrying (${retryCount})...`;
+                await new Promise(r => setTimeout(r, 1000));
+                return get_neko();
+            } else {
+                document.getElementById("status").innerText += " | Max retries reached.";
+                return null;
+            }
+        }
+    }
+
+    async function showImage() {
+        const imageUrl = await get_neko();
+        if (imageUrl) {
+            document.getElementById("randomImage").src = imageUrl;
+        }
+    }
+
+    document.getElementById("randomBtn").addEventListener("click", showImage);
+
+    showImage();
+</script>
+</body>
+</html>
