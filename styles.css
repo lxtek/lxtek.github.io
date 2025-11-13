@@ -1,0 +1,679 @@
+        :root {
+            --bg-primary: #0f0f23;
+            --bg-secondary: #1a1a2e;
+            --bg-glass: rgba(31, 41, 55, 0.4);
+            --text-primary: #E5E7EB;
+            --text-secondary: #9CA3AF;
+            --text-muted: #6B7280;
+            --accent-primary: #a78bfa;
+            --accent-secondary: #818cf8;
+            --accent-tertiary: #f59e0b;
+            --border-glass: rgba(255, 255, 255, 0.1);
+            --shadow-glass: rgba(0, 0, 0, 0.37);
+            --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-bounce: cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            --gradient-primary: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            --gradient-secondary: linear-gradient(135deg, var(--accent-secondary), var(--accent-tertiary));
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 2;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+        }
+
+        *:focus {
+            outline: 2px solid var(--accent-primary);
+            outline-offset: 2px;
+        }
+
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 6px;
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+            padding: 8px;
+            text-decoration: none;
+            border-radius: 4px;
+            z-index: 100;
+            font-weight: 600;
+        }
+
+        .skip-link:focus {
+            top: 6px;
+        }
+
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+        }
+
+        .animated-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 80%, rgba(167, 139, 250, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(129, 140, 248, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 40%, rgba(245, 158, 11, 0.05) 0%, transparent 50%);
+            animation: backgroundShift 20s ease-in-out infinite;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(180deg); }
+        }
+
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        .glass-card {
+            --bg-glass: rgba(31, 41, 55, 0.4);
+            border: 1px solid var(--border-glass);
+            transition: all 0.4s var(--transition-smooth);
+            will-change: transform;
+            border-radius: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.8s var(--transition-smooth);
+        }
+
+
+        @media (prefers-reduced-motion: no-preference) {
+            @keyframes fadeInUp {
+                from { 
+                    opacity: 0; 
+                    transform: translateY(30px) scale(0.95); 
+                }
+                to { 
+                    opacity: 1; 
+                    transform: translateY(0) scale(1); 
+                }
+            }
+            
+            @keyframes float {
+                0%, 100% { transform: translateY(0px); }
+                50% { transform: translateY(-10px); }
+            }
+
+            @keyframes pulse {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.8; }
+            }
+
+            @keyframes glow {
+                0%, 100% { box-shadow: 0 0 20px rgba(167, 139, 250, 0.3); }
+                50% { box-shadow: 0 0 30px rgba(167, 139, 250, 0.6); }
+            }
+
+            .fade-in {
+                animation: fadeInUp 0.8s var(--transition-smooth) forwards;
+            }
+
+            .float-animation {
+                animation: float 6s ease-in-out infinite;
+            }
+
+            .pulse-animation {
+                animation: pulse 3s ease-in-out infinite;
+            }
+
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .fade-in, .float-animation, .pulse-animation {
+                animation: none;
+            }
+        }
+
+        .avatar-container {
+            position: relative;
+            width: 8rem;
+            height: 8rem;
+            margin: 0 auto 1.5rem;
+        }
+
+        .avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--accent-primary);
+            transition: all 0.3s var(--transition-smooth);
+        }
+
+        .avatar:hover {
+            transform: scale(1.05);
+        }
+
+        .avatar-ring {
+            display: none;
+        }
+
+        .status-indicator {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            width: 20px;
+            height: 20px;
+            background: #10b981;
+            border: 3px solid var(--bg-primary);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+        }
+
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 20%;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            transition: all 0.3s var(--transition-smooth);
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .social-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: opacity 0.3s var(--transition-smooth);
+            z-index: -1;
+        }
+
+
+        .social-link:hover::before {
+            /* make the hover overlay more transparent so icons and text remain visible */
+            opacity: 0.28;
+        }
+
+        .social-link svg,
+        .social-link img {
+            width: 1.75rem;
+            height: 1.75rem;
+            transition: transform 0.3s var(--transition-smooth);
+        }
+
+        /* Ensure icons are visible on dark backgrounds: invert/brighten SVGs and images */
+        .social-link img,
+        .social-link svg,
+        .stream_buttons img {
+            filter: invert(1) brightness(1.2) saturate(0.95);
+            opacity: 0.95;
+        }
+
+        .social-link:hover svg,
+        .social-link:hover img {
+            transform: scale(1.1);
+        }
+
+        /* When .social-link is used in a list row (.stream_buttons) make it a full-width row button
+           instead of the small circular icon button used elsewhere. */
+        .stream_buttons .social-link {
+            width: 100% !important;
+            height: auto !important;
+            border-radius: 0.5rem !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            padding: 1rem 1.25rem !important;
+            /* Match aboutbox colors and border */
+            background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+            border: 2px solid rgba(255,255,255,0.09);
+            color: var(--text-primary) !important;
+        }
+
+        .stream_buttons .social-link img {
+            width: 22px !important;
+            height: 22px !important;
+            filter: none !important; /* use original icon colors for row buttons */
+            margin-right: 0.75rem;
+            opacity: 0.95;
+        }
+
+        /* Increase spacing between the list items (social links) */
+        .stream_buttons {
+            margin-bottom: 0.85rem; /* space between rows */
+            list-style: none;
+        }
+
+        /* Remove bottom border on last item to emphasize spacing */
+        .stream_buttons:last-child {
+            margin-bottom: 0;
+        }
+
+        /* If list items use border-bottom inline styles, add extra space by pushing the inner link down */
+        .stream_buttons .social-link {
+            padding-top: 1.1rem !important;
+            padding-bottom: 1.1rem !important;
+        }
+
+        .copy-button {
+            position: relative;
+            width: 100%;
+            background: linear-gradient(135deg, rgba(107, 114, 128, 0.3), rgba(75, 85, 99, 0.3));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+            font-weight: 500;
+            padding: 1rem 1.25rem;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s var(--transition-smooth);
+            overflow: hidden;
+        }
+
+        .copy-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s var(--transition-smooth);
+        }
+
+        .copy-button:hover {
+            background: var(--gradient-primary);
+            transform: translateY(-50px);
+            box-shadow: 0 10px 30px rgba(167, 139, 250, 0.3);
+        }
+
+        .copy-button:hover::before {
+            left: 100%;
+        }
+
+        .copy-button:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 1rem 2rem;
+            background: var(--gradient-primary);
+            color: white;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            opacity: 0;
+            transition: all 0.5s var(--transition-bounce);
+            z-index: 50;
+            box-shadow: 0 10px 30px rgba(129, 140, 248, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .toast.show {
+            bottom: 2rem;
+            opacity: 1;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s var(--transition-smooth);
+        }
+
+        .stat-item:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+
+
+        @media (max-width: 640px) {
+            .glass-card {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+            
+            .avatar-container {
+                width: 6rem;
+                height: 6rem;
+            }
+            
+            .social-link {
+                width: 3rem;
+                height: 3rem;
+            }
+            
+            .social-link svg,
+            .social-link img {
+                width: 1.5rem;
+                height: 1.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .loading {
+            background: linear-gradient(90deg, #374151, #4B5563, #374151);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .music-bars {
+            display: flex;
+            align-items: end;
+            gap: 2px;
+            height: 20px;
+            margin-left: 8px;
+        }
+
+        .music-bar {
+            width: 3px;
+            background: var(--accent-primary);
+            border-radius: 2px;
+            animation: musicBounce 1s ease-in-out infinite;
+        }
+
+        .music-bar:nth-child(1) { animation-delay: 0s; height: 60%; }
+        .music-bar:nth-child(2) { animation-delay: 0.1s; height: 80%; }
+        .music-bar:nth-child(3) { animation-delay: 0.2s; height: 100%; }
+        .music-bar:nth-child(4) { animation-delay: 0.3s; height: 70%; }
+
+        @keyframes musicBounce {
+            0%, 100% { transform: scaleY(0.3); }
+            50% { transform: scaleY(1); }
+        }
+
+        /* ==========================
+           About page specific styles
+           ========================== */
+
+        /* Make the background video cover the viewport and sit behind content */
+        #bg-video {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 100vw;
+            height: 100vh;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+            z-index: -3;
+            pointer-events: none;
+            filter: brightness(0.45) saturate(0.9);
+        }
+
+        /* Simple overlay on top of the video for better contrast */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(5,8,15,0.55) 0%, rgba(5,8,15,0.65) 100%);
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        /* Page wrapper that centers the main content */
+        #vanta-bg {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5rem 1.25rem;
+        }
+
+        main {
+            width: 100%;
+            max-width: 980px;
+        }
+
+        .aboutbox {
+            display: flex;
+            align-items: center;
+            gap: 1.75rem;
+            padding: 3.25rem;
+            position: relative; /* allow absolute avatar positioning */
+            padding-left: 220px; /* reserve more space for the avatar so content can span full width */
+            background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+            border: 2px solid rgba(255,255,255,0.09);
+            border-radius: 1.125rem;
+            box-shadow: 0 14px 44px rgba(2,6,23,0.7), 0 0 0 6px rgba(0,0,0,0.12) inset;
+            color: var(--text-primary);
+        }
+
+        .aboutbox-image {
+            width: 148px;
+            height: 148px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex: 0 0 148px;
+            border: 4px solid rgba(255,255,255,0.08);
+            box-shadow: 0 8px 28px rgba(0,0,0,0.7), 0 0 0 10px rgba(167,139,250,0.07);
+            position: absolute; /* remove from flow so the heading can be full width */
+            left: 28px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* Note: img elements are replaced elements and don't reliably support ::before/::after.
+           We simulate a thicker ring using box-shadow above and position the image for future wrappers. */
+
+        .aboutbox h1 {
+            font-size: 1.95rem;
+            margin: 0 0 0.25rem 0;
+            line-height: 1.05;
+            display: block;
+            gap: 0.6rem;
+            font-weight: 800;
+            width: 100%; /* span the full width of the .aboutbox content area */
+            text-align: center; /* center the nickname across the whole card */
+            min-width: 0;
+            white-space: normal;
+            overflow-wrap: anywhere;
+        }
+
+        .aboutbox h3 {
+            margin: 0 0 0.5rem 0;
+            color: var(--text-secondary);
+            font-weight: 700;
+        }
+
+        .aboutbox p {
+            margin: 0;
+            color: var(--text-muted);
+            max-width: 46ch;
+        }
+
+
+        .links-split .links-split-grid > .projects-column .right-panel {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Make the links inside the links-split card lay out as a single horizontal row
+           on larger viewports while keeping the original stacked layout on small screens. */
+        .links-split-grid {
+            display: flex;
+            gap: 0.75rem;
+            align-items: stretch;
+        }
+
+        .links-split-grid .links-column {
+            width: 100%;
+        }
+
+        .links-split-grid .links-column ul {
+            display: flex;
+            gap: 0.85rem;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            align-items: center;
+        }
+
+        .links-split-grid .links-column .stream_buttons {
+            flex: 1 1 0;
+            margin-bottom: 0; /* remove vertical spacing when in a row */
+            border-bottom: none !important; /* override inline styles if present */
+            list-style: none;
+        }
+
+        .links-split-grid .links-column .stream_buttons .social-link {
+            /* keep the row-style button appearance but allow them to share the row */
+            width: 100% !important;
+            height: auto !important;
+            border-radius: 0.75rem !important;
+            padding-top: 0.9rem !important;
+            padding-bottom: 0.9rem !important;
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+            justify-content: flex-start !important;
+        }
+
+        /* Push the trailing open-icon (the small arrow) to the far right of each button */
+        .links-split-grid .links-column .stream_buttons .social-link img:last-child {
+            margin-left: auto;
+        }
+
+        /* Responsive: stack back to column on narrow screens */
+        @media (max-width: 720px) {
+            .links-split-grid .links-column ul {
+                flex-direction: column;
+            }
+
+            .links-split-grid {
+                display: block;
+            }
+            .links-split-grid .links-column .stream_buttons {
+                margin-bottom: 0.85rem;
+            }
+        }
+
+        /* Increase vertical spacing between stacked glass cards */
+        .glass-card + .glass-card {
+            margin-top: 2.5rem;
+        }
+
+        /* Specifically ensure the section after the aboutbox has more space (overrides inline styles)
+           so the link card sits further below the header card. */
+        .aboutbox + section {
+            margin-top: 3rem !important;
+        }
+
+        /* Latvian flag next to the name */
+        .aboutlatvia {
+            width: 28px;
+            height: auto;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.45);
+        }
+
+        /* Custom tag styling — custom elements are valid selectors */
+        hyinya_s_nizy {
+            display: block;
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        hyinya_s_nizy a {
+            color: var(--accent-secondary);
+            text-decoration: underline;
+        }
+
+        /* Make the about box stack on small viewports */
+        @media (max-width: 720px) {
+            .aboutbox {
+                flex-direction: column;
+                text-align: center;
+                padding: 1.5rem;
+                padding-left: 1.5rem; /* remove the large left padding on small screens */
+                position: static;
+            }
+
+            .aboutbox-image {
+                width: 110px;
+                height: 110px;
+                flex: 0 0 110px;
+                position: static;
+                transform: none;
+                left: auto;
+                top: auto;
+            }
+
+            .aboutbox p {
+                max-width: 100%;
+            }
+        }
+
