@@ -15,14 +15,14 @@ function Show-Logo {
     $logo = @"
   ==================================================================
   
-       WIN    WIN III NN   NN     SSSSS   AAA   NN   NN
-       WIN    WIN III NNN  NN    SS      AAAAA  NNN  NN
-       WIN WW WIN III NN N NN     SSSS  AA   AA NN N NN
-       WIN WW WIN III NN  NNN        SS AAAAAAA NN  NNN
-        WW    WW  III NN   NN    SSSSS  AA   AA NN   NN
+       WIN   WIN III NN   NN    VV     VV MM    MM
+       WIN   WIN III NNN  NN    VV     VV MMM  MMM
+       WIN W WIN III NN N NN     VV   VV  MM MM MM
+       WIN W WIN III NN  NNN      VV VV   MM    MM
+        WW   WW  III NN   NN       VVV    MM    MM
   
-              Windows Sandbox Setup Script v2.0
-                Enhanced Configuration Manager
+              Windows VM Setup Script v2.1
+                  by chatgpthvh
   
   ==================================================================
 "@
@@ -36,6 +36,32 @@ function Show-Logo {
 
 Show-Logo
 
+# Wallpaper Selection
+Write-Host "  ==================================================================" -ForegroundColor Magenta
+Write-Host "    SELECT WALLPAPER" -ForegroundColor Magenta
+Write-Host "  ==================================================================" -ForegroundColor Magenta
+Write-Host ""
+Write-Host "    1. Blue Nord Theme" -ForegroundColor Cyan
+Write-Host "    2. Gray Nord Theme" -ForegroundColor Gray
+Write-Host ""
+Write-Host "  Enter your choice (1 or 2): " -NoNewline -ForegroundColor Yellow
+$wallpaperChoice = Read-Host
+
+$wallpaperFile = switch ($wallpaperChoice) {
+    "1" { "BLUENord.jpg" }
+    "2" { "GRAYNord.jpg" }
+    default { 
+        Write-Host "  Invalid choice, defaulting to Blue Nord" -ForegroundColor Yellow
+        Start-Sleep -Seconds 1
+        "BLUENord.jpg" 
+    }
+}
+
+Write-Host ""
+Write-Host "  Selected: $wallpaperFile" -ForegroundColor Green
+Write-Host ""
+Start-Sleep -Seconds 1
+
 # Configuration
 $setupFolder = "C:\SandboxSetup"
 $logsFolder = Join-Path $setupFolder "Logs"
@@ -43,19 +69,19 @@ $logFile = Join-Path $logsFolder "setup_$(Get-Date -Format 'yyyyMMdd_HHmmss').lo
 
 $downloads = @(
     @{
-        Url = "https://chatgpthvh.xyz/WinSB/7z2409-x64.exe"
+        Url = "https://lxtek.github.io/vm/7z2409-x64.exe"
         FileName = "7z2409-x64.exe"
         Description = "7-Zip Archive Manager"
         Type = "Installer"
     },
     @{
-        Url = "http://chatgpthvh.xyz/WinSB/BraveBrowserSetup-BRV013.exe"
+        Url = "https://lxtek.github.io/vm/BraveBrowserSetup-BRV013.exe"
         FileName = "BraveBrowserSetup-BRV013.exe"
         Description = "Brave Browser"
         Type = "Installer"
     },
     @{
-        Url = "http://chatgpthvh.xyz/WinSB/Everything-1.4.1.1030.x86-Setup.exe"
+        Url = "https://lxtek.github.io/vm/Everything-1.4.1.1030.x86-Setup.exe"
         FileName = "Everything-1.4.1.1030.x86-Setup.exe"
         Description = "Everything Search"
         Type = "Installer"
@@ -67,20 +93,20 @@ $downloads = @(
         Type = "Installer"
     },
     @{
-        Url = "https://chatgpthvh.xyz/WinSB/Procmon64.exe"
+        Url = "https://lxtek.github.io/vm/Procmon64.exe"
         FileName = "Procmon64.exe"
         Description = "Process Monitor (Sysinternals)"
         Type = "Portable"
     },
     @{
-        Url = "https://chatgpthvh.xyz/WinSB/Autoruns64.exe"
+        Url = "https://lxtek.github.io/vm/Autoruns64.exe"
         FileName = "Autoruns64.exe"
         Description = "Autoruns (Sysinternals)"
         Type = "Portable"
     },
     @{
-        Url = "https://chatgpthvh.xyz/WinSB/VMBg.jpg"
-        FileName = "VMBg.jpg"
+        Url = "https://lxtek.github.io/vm/$wallpaperFile"
+        FileName = $wallpaperFile
         Description = "Desktop Wallpaper"
         Type = "Resource"
     }
@@ -367,7 +393,7 @@ foreach ($tool in $portableTools) {
 # Step 4: Set Wallpaper
 Write-Progress-Message -Type "Header" -Message "CUSTOMIZING APPEARANCE"
 
-$wallpaperPath = Join-Path $setupFolder "VMBg.jpg"
+$wallpaperPath = Join-Path $setupFolder $wallpaperFile
 if (Test-Path $wallpaperPath) {
     Write-Progress-Message -Type "Info" -Message "Applying desktop wallpaper..."
     
@@ -544,9 +570,6 @@ try {
     Write-Log "SKIP: Visual performance tweaks partially applied"
 }
 
-# Step 8: Create Desktop Shortcuts
-# Removed - user requested no shortcuts
-
 # Calculate execution time
 $script:stats.EndTime = Get-Date
 $duration = $script:stats.EndTime - $script:stats.StartTime
@@ -586,13 +609,5 @@ Write-Host ""
 Write-Host "  ==================================================================" -ForegroundColor Green
 Write-Host ""
 
-# Offer to open setup folder
-Write-Host "  Would you like to open the setup folder now? (Y/N): " -NoNewline -ForegroundColor Yellow
-$response = Read-Host
-if ($response -eq "Y" -or $response -eq "y") {
-    Start-Process explorer.exe -ArgumentList $setupFolder
-}
-
-Write-Host ""
 Write-Host "  Press any key to exit..." -ForegroundColor Cyan
 $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
