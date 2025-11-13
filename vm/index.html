@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>𓆩 ᴄʜᴀᴛɢᴘᴛ | ʜᴠʜ 𓆪 - Разработчик и геймер</title>
+    <style>
+        @font-face {
+            font-family: 'Aqum';
+            src: url('./assets/Aqum.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --purple: #8b5cf6;
+            --purple-light: #a78bfa;
+            --purple-dark: #7c3aed;
+            --dark: #0f0f23;
+            --darker: #0a0a15;
+            --text: #e5e7eb;
+            --text-muted: #9ca3af;
+            --glass: rgba(139, 92, 246, 0.1);
+            --glass-border: rgba(139, 92, 246, 0.2);
+        }
+
+        body {
+            font-family: 'Aqum', sans-serif;
+            background: var(--darker);
+            color: var(--text);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Background Video */
+        #bg-video {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 100vw;
+            height: 100vh;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+            z-index: -2;
+            pointer-events: none;
+            filter: brightness(0.4) saturate(0.9);
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(10,10,21,0.6) 0%, rgba(10,10,21,0.8) 100%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+            min-height: 100vh;
+        }
+
+        /* Profile Section */
+        .profile-section {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 13px !important;
+            border: 3px solid var(--glass-border);
+            object-fit: cover;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.3);
+        }
+
+        .profile-section h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            color: var(--purple-light);
+        }
+
+        .flag-icon {
+            width: 28px;
+            height: auto;
+            vertical-align: middle;
+            margin-left: 8px;
+            border-radius: 4px;
+        }
+
+        .profile-section p {
+            font-size: 1rem;
+            color: var(--text-muted);
+        }
+
+        /* Card */
+        .card {
+            background: rgba(15, 15, 35, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 13px !important;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--purple-light);
+        }
+
+        /* Social Links */
+        .social-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid var(--glass-border);
+            border-radius: 13px !important;
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .social-btn:hover {
+            background: rgba(139, 92, 246, 0.25);
+            border-color: var(--purple);
+            transform: translateX(5px);
+        }
+
+        .social-icon {
+            width: 22px;
+            height: 22px;
+            filter: brightness(1.2);
+        }
+
+        .social-btn span {
+            flex: 1;
+        }
+
+        .arrow-icon {
+            width: 18px;
+            height: 18px;
+            opacity: 0.7;
+        }
+
+        /* Projects */
+        .project-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.25rem;
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid var(--glass-border);
+            border-radius: 13px !important;
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-bottom: 0.75rem;
+        }
+
+        .project-btn:last-child {
+            margin-bottom: 0;
+        }
+
+        .project-btn:hover {
+            background: rgba(139, 92, 246, 0.25);
+            border-color: var(--purple);
+            transform: translateX(5px);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .footer p {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .container {
+                padding: 2rem 1rem;
+            }
+
+            .profile-section h1 {
+                font-size: 1.5rem;
+            }
+
+            .profile-image {
+                width: 120px;
+                height: 120px;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Video -->
+    <video id="bg-video" muted loop autoplay playsinline>
+        <source src="./assets/video/CHZZKMoca_7thMoca.webm" type="video/webm">
+        <source src="./assets/video/CHZZKMoca_7thMoca.mp4" type="video/mp4">
+    </video>
+    <div class="overlay"></div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Profile Section -->
+        <div class="profile-section">
+            <img src="./assets/profile_picture.jpg" alt="Profile" class="profile-image">
+            <h1>𓆩 ᴄʜᴀᴛɢᴘᴛ | ʜᴠʜ 𓆪 <img src="./assets/latvia.png" alt="LV" class="flag-icon"></h1>
+            <p>Разработчик • Геймер</p>
+        </div>
+
+        <!-- Social Links Card -->
+        <div class="card">
+            <h2>Социальные сети</h2>
+            <div class="social-links">
+                <a href="https://github.com/chatgptzpx" target="_blank" class="social-btn">
+                    <img src="./assets/icon/GitHub.svg" alt="GitHub" class="social-icon">
+                    <span>GitHub</span>
+                    <img src="./assets/open.svg" alt="→" class="arrow-icon">
+                </a>
+                <a href="https://www.youtube.com/@lxtek" target="_blank" class="social-btn">
+                    <img src="./assets/icon/YouTube.svg" alt="YouTube" class="social-icon">
+                    <span>YouTube</span>
+                    <img src="./assets/open.svg" alt="→" class="arrow-icon">
+                </a>
+                <a href="https://chatgpthvh.t.me" target="_blank" class="social-btn">
+                    <img src="./assets/icon/Telegram.svg" alt="Telegram" class="social-icon">
+                    <span>Telegram</span>
+                    <img src="./assets/open.svg" alt="→" class="arrow-icon">
+                </a>
+                <a href="https://steamcommunity.com/id/lxtek/" target="_blank" class="social-btn">
+                    <img src="./assets/icon/Steam.svg" alt="Steam" class="social-icon">
+                    <span>Steam</span>
+                    <img src="./assets/open.svg" alt="→" class="arrow-icon">
+                </a>
+            </div>
+        </div>
+
+        <!-- Projects Card -->
+        <div class="card">
+            <h2>Проекты</h2>
+            <a href="scr/" class="project-btn">
+                <span>Screammer</span>
+                <img src="./assets/open.svg" alt="→" class="arrow-icon">
+            </a>
+            <a href="scr/catgirl" target="_blank" class="project-btn">
+                <span>Random Catgirl Image</span>
+                <img src="./assets/open.svg" alt="→" class="arrow-icon">
+            </a>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Посещений:</p>
+            <img src="https://count.getloli.com/get/@:chatgpthvh.xyz?theme=e621" alt="counter">
+            <p style="margin-top: 1.5rem;">Создано chatgpthvh</p>
+        </div>
+    </div>
+</body>
+
+</html>
