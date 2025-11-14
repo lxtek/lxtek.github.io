@@ -1,11 +1,10 @@
 @echo off
-:: run-setup.bat  - launcher that downloads setup.ps1 and runs it (elevates if needed)
-:: IMPORTANT: Put this file in C:\SandboxSetup on the host. CustomSandbox.wsb will copy ONLY this file.
+:: ставит в админку
+:: мб нахуй надо? типо теперь он через curl в cmd просто ворк
 
 set "PSURL=https://chatgpthvh.xyz/vm/setup.ps1"
 set "TMPPS=%temp%\sb_setup.ps1"
 
-:: Check for admin; if not, re-launch elevated
 NET SESSION >nul 2>&1
 if %errorlevel% neq 0 (
   echo Requesting elevation...
@@ -25,8 +24,9 @@ if not exist "%TMPPS%" (
   exit /b 1
 )
 
-echo Executing setup.ps1 ...
+echo Запускаем / Starting
 powershell -NoProfile -ExecutionPolicy Bypass -File "%TMPPS%"
 
 echo Done. Press any key to close.
 pause >nul
+
