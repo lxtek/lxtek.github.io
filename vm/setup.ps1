@@ -90,6 +90,19 @@ $downloads = @(
         Type = "Installer"
     },
     @{
+        Url = "https://www.softportal.com/en/process-hacker/2/getsoft"
+        FileName = "processhacker-2.39-setup.exe"
+        Description = "Process Hacker"
+        Type = "Installer"
+    },
+    @{
+        Url = "https://www.sublimetext.com/download_thanks?target=win-x64"
+        FileName = "sublime_text_build_4200_x64_setup.exe"
+        Description = "Sublime Text"
+        Type = "Installer"
+    },
+
+    @{
         Url = "https://lxtek.github.io/vm/Procmon64.exe"
         FileName = "Procmon64.exe"
         Description = "Process Monitor (Sysinternals)"
