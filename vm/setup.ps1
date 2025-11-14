@@ -2,14 +2,13 @@
 
 <#
 .SYNOPSIS
-    Windows Sandbox Auto-Configuration Script
+   Авто установка хуйни
 .DESCRIPTION
-    Automatically configures Windows Sandbox with essential tools and settings
+    Авто установка некоторых программ в cmd для VM [Обычные пк тоже ворк, но хз]
 .NOTES
-    Run this script inside Windows Sandbox with administrator privileges
-#>
+ Требует АДМ
+ #>
 
-# Enhanced ASCII Logo with Animation
 function Show-Logo {
     Clear-Host
     $logo = @"
@@ -22,7 +21,7 @@ function Show-Logo {
         WW   WW  III NN   NN       VVV    MM    MM
   
               Windows VM Setup Script v2.1
-                  by chatgpthvh
+                  by chatgpthvh.t.me
   
   ==================================================================
 "@
@@ -36,7 +35,6 @@ function Show-Logo {
 
 Show-Logo
 
-# Wallpaper Selection
 Write-Host "  ==================================================================" -ForegroundColor Magenta
 Write-Host "    SELECT WALLPAPER" -ForegroundColor Magenta
 Write-Host "  ==================================================================" -ForegroundColor Magenta
@@ -62,7 +60,6 @@ Write-Host "  Selected: $wallpaperFile" -ForegroundColor Green
 Write-Host ""
 Start-Sleep -Seconds 1
 
-# Configuration
 $setupFolder = "C:\SandboxSetup"
 $logsFolder = Join-Path $setupFolder "Logs"
 $logFile = Join-Path $logsFolder "setup_$(Get-Date -Format 'yyyyMMdd_HHmmss').log"
@@ -112,7 +109,6 @@ $downloads = @(
     }
 )
 
-# Statistics
 $script:stats = @{
     Downloaded = 0
     Skipped = 0
@@ -121,7 +117,6 @@ $script:stats = @{
     StartTime = Get-Date
 }
 
-# Helper Functions
 function Write-Log {
     param([string]$Message)
     try {
@@ -130,7 +125,6 @@ function Write-Log {
             "$timestamp - $Message" | Out-File -FilePath $logFile -Append -Encoding UTF8
         }
     } catch {
-        # Silently ignore logging errors during setup
     }
 }
 
@@ -232,11 +226,9 @@ function Get-SystemInfo {
     Write-Log "System Info - OS: $($os.Caption), CPU: $($cpu.Name), RAM: $ram GB"
 }
 
-# Step 0: System Info and Prerequisites
 Get-SystemInfo
 Start-Sleep -Seconds 2
 
-# Step 1: Create Setup Folders (before testing internet so logs work)
 Write-Progress-Message -Type "Header" -Message "CREATING DIRECTORIES"
 
 try {
@@ -259,14 +251,12 @@ try {
     exit 1
 }
 
-# Test Internet (after folders are created)
 if (-not (Test-InternetConnection)) {
     Write-Progress-Message -Type "Error" -Message "Internet connection required for downloads"
     Read-Host "`nPress Enter to exit"
     exit 1
 }
 
-# Step 2: Download Files
 Write-Progress-Message -Type "Header" -Message "DOWNLOADING FILES"
 
 $downloadedFiles = @()
@@ -324,7 +314,6 @@ for ($i = 0; $i -lt $totalDownloads; $i++) {
 
 Write-Host ""
 
-# Step 3: Install Downloaded Programs
 Write-Progress-Message -Type "Header" -Message "INSTALLING PROGRAMS"
 
 $installers = Get-ChildItem -Path $setupFolder -Filter "*.exe" | Where-Object { $_.Name -notmatch "Procmon64|Autoruns64" }
@@ -365,7 +354,6 @@ if ($installers.Count -eq 0) {
     }
 }
 
-# Step 3.5: Copy Portable Tools to Desktop
 Write-Progress-Message -Type "Header" -Message "DEPLOYING PORTABLE TOOLS"
 
 $desktopPath = [Environment]::GetFolderPath("Desktop")
@@ -390,7 +378,6 @@ foreach ($tool in $portableTools) {
     }
 }
 
-# Step 4: Set Wallpaper
 Write-Progress-Message -Type "Header" -Message "CUSTOMIZING APPEARANCE"
 
 $wallpaperPath = Join-Path $setupFolder $wallpaperFile
@@ -423,24 +410,17 @@ public class Wallpaper {
     Write-Log "SKIP: Wallpaper file not available"
 }
 
-# Step 5: Apply Dark Theme
 Write-Progress-Message -Type "Info" -Message "Enabling dark theme..."
 
 try {
-    # Dark theme for apps
     New-Item -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Force | Out-Null
     Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name AppsUseLightTheme -Value 0 -Type DWord
     
-    # Dark theme for system
     Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name SystemUsesLightTheme -Value 0 -Type DWord
-    
-    # Set accent color
-    Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name ColorPrevalence -Value 1 -Type DWord
-    
+        
     Write-Progress-Message -Type "Success" -Message "Dark theme enabled"
     Write-Log "SUCCESS: Dark theme applied"
     
-    # Restart Explorer
     Write-Progress-Message -Type "Info" -Message "Restarting Explorer to apply changes..."
     Stop-Process -Name explorer -Force -ErrorAction SilentlyContinue
     Start-Sleep -Seconds 2
@@ -452,7 +432,6 @@ try {
     Write-Log "ERROR: Dark theme - $_"
 }
 
-# Step 6: Configure Keyboard Layouts
 Write-Progress-Message -Type "Header" -Message "KEYBOARD CONFIGURATION"
 
 try {
@@ -462,7 +441,6 @@ try {
     $langList.Add("ru-RU")
     Set-WinUserLanguageList -LanguageList $langList -Force
     
-    # Configure keyboard toggle
     New-Item -Path "HKCU:\Keyboard Layout\Toggle" -Force | Out-Null
     Set-ItemProperty -Path "HKCU:\Keyboard Layout\Toggle" -Name "Hotkey" -Value "1" -Type String
     Set-ItemProperty -Path "HKCU:\Keyboard Layout\Toggle" -Name "Language Hotkey" -Value "1" -Type String
@@ -478,10 +456,8 @@ try {
     Write-Log "ERROR: Keyboard configuration - $_"
 }
 
-# Step 7: Performance Tweaks
 Write-Progress-Message -Type "Header" -Message "PERFORMANCE OPTIMIZATION"
 
-# High Performance Power Plan
 try {
     Write-Progress-Message -Type "Info" -Message "Setting High Performance power plan..."
     $powerPlanOutput = powercfg /list
@@ -506,7 +482,6 @@ try {
     Write-Log "ERROR: Power plan - $_"
 }
 
-# Disable Hibernation
 try {
     Write-Progress-Message -Type "Info" -Message "Disabling hibernation..."
     powercfg /hibernate off 2>$null
@@ -517,7 +492,6 @@ try {
     Write-Log "ERROR: Hibernation - $_"
 }
 
-# Disable Windows Search
 try {
     Write-Progress-Message -Type "Info" -Message "Stopping Windows Search service..."
     Stop-Service -Name WSearch -Force -ErrorAction SilentlyContinue
@@ -529,7 +503,6 @@ try {
     Write-Log "ERROR: Windows Search - $_"
 }
 
-# Disable Superfetch/SysMain
 try {
     Write-Progress-Message -Type "Info" -Message "Disabling Superfetch/SysMain..."
     Stop-Service -Name SysMain -Force -ErrorAction SilentlyContinue
@@ -541,7 +514,6 @@ try {
     Write-Log "SKIP: Superfetch service"
 }
 
-# Disable Windows Defender (Sandbox only)
 try {
     Write-Progress-Message -Type "Info" -Message "Configuring Windows Defender for Sandbox..."
     Set-MpPreference -DisableRealtimeMonitoring $true -ErrorAction SilentlyContinue
@@ -552,15 +524,12 @@ try {
     Write-Log "SKIP: Windows Defender configuration"
 }
 
-# Visual Performance Tweaks
 try {
     Write-Progress-Message -Type "Info" -Message "Optimizing visual performance..."
     
-    # Disable animations
     Set-ItemProperty -Path "HKCU:\Control Panel\Desktop\WindowMetrics" -Name MinAnimate -Value 0
     Set-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name UserPreferencesMask -Value ([byte[]](0x90,0x12,0x03,0x80,0x10,0x00,0x00,0x00))
     
-    # Adjust for best performance
     Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects" -Name VisualFXSetting -Value 2
     
     Write-Progress-Message -Type "Success" -Message "Visual performance optimized"
@@ -570,12 +539,10 @@ try {
     Write-Log "SKIP: Visual performance tweaks partially applied"
 }
 
-# Calculate execution time
 $script:stats.EndTime = Get-Date
 $duration = $script:stats.EndTime - $script:stats.StartTime
 $durationFormatted = "{0:mm}m {0:ss}s" -f $duration
 
-# Final Statistics and Summary
 Write-Progress-Message -Type "Header" -Message "SETUP SUMMARY"
 
 Write-Host ""
