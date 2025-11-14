@@ -2,26 +2,265 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>WinSB Files</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WIN SB :: VM Setup Interface</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: monospace; background: #111; color: #0f0; padding: 20px; }
-        a { color: #0ff; text-decoration: none; }
-        a:hover { text-decoration: underline; }
-        ul { list-style-type: none; padding: 0; }
+        :root {
+            --background: #1A1A1D; /* Deep, dark grey */
+            --primary: #C3073F; /* Muted, strong red */
+            --secondary: #6F2232; /* Darker red accent */
+            --text-main: #EAEAEA; /* Off-white for readability */
+            --text-dim: #95A5A6; /* Grey for subtitles and secondary text */
+            --border-color: #4E4E50;
+        }
+
+        /* --- General Setup --- */
+        body {
+            background-color: var(--background);
+            color: var(--text-main);
+            font-family: 'Roboto Mono', monospace;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        /* --- Main Container --- */
+        .grid-container {
+            display: grid;
+            width: 100%;
+            max-width: 900px;
+            grid-template-columns: 1fr;
+            grid-template-rows: auto auto auto;
+            grid-template-areas:
+                "header"
+                "installer"
+                "files";
+            gap: 2rem;
+            border: 1px solid var(--border-color);
+            background: #212125;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        @media (min-width: 768px) {
+            .grid-container {
+                grid-template-columns: 300px 1fr;
+                grid-template-areas:
+                    "header installer"
+                    "header files";
+                gap: 2.5rem;
+                padding: 2.5rem;
+            }
+        }
+        
+        /* --- General Element Styling --- */
+        h1, h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 0;
+        }
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        a:hover {
+            color: var(--text-main);
+        }
+
+        /* --- Header / Side Panel --- */
+        .header-panel {
+            grid-area: header;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .header-panel {
+                border-right: 1px solid var(--border-color);
+                border-bottom: none;
+                padding-bottom: 0;
+                padding-right: 2.5rem;
+                text-align: right;
+            }
+        }
+        
+        .header-panel h1 {
+            font-size: 2.5rem;
+            color: var(--primary);
+        }
+        
+        .header-panel .subtitle {
+            font-size: 1rem;
+            color: var(--text-dim);
+            margin-top: 0.5rem;
+        }
+
+        .source-link {
+            margin-top: 2rem;
+            font-size: 0.9rem;
+        }
+        .source-link span {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-dim);
+        }
+
+        /* --- Installer Section --- */
+        .installer-panel {
+            grid-area: installer;
+        }
+        
+        .installer-panel h2 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            position: relative;
+        }
+        
+        .installer-panel h2::before {
+            content: '>';
+            color: var(--primary);
+            margin-right: 0.75rem;
+        }
+
+        .command-box {
+            background-color: var(--background);
+            border: 1px solid var(--border-color);
+            border-left: 3px solid var(--primary);
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-radius: 4px;
+        }
+        
+        .command-box code {
+            font-size: 0.9rem;
+            color: var(--text-main);
+            word-break: break-all;
+        }
+
+        .copy-button {
+            background: var(--secondary);
+            color: var(--text-main);
+            border: 1px solid var(--primary);
+            padding: 0.5rem 1rem;
+            font-family: 'Space Grotesk', sans-serif;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-left: 1rem;
+            transition: background-color 0.3s ease;
+        }
+        
+        .copy-button:hover {
+            background: var(--primary);
+        }
+
+        .copy-button.copied {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+
+        /* --- Files Section --- */
+        .files-panel {
+            grid-area: files;
+        }
+        
+        .files-panel h2 {
+             margin-bottom: 1rem;
+             font-size: 1.2rem;
+        }
+        
+         .files-panel h2::before {
+            content: '>';
+            color: var(--primary);
+            margin-right: 0.75rem;
+        }
+
+        .file-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .file-list li a {
+            display: block;
+            padding: 0.75rem 1.25rem;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        
+        .file-list li a:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-color: var(--border-color);
+            color: var(--primary);
+        }
     </style>
 </head>
 <body>
-    <h1>WinSB Folder Files</h1>
-    <ul>
-        <li><a href="7z2409-x64.exe">7z2409-x64.exe</a></li>
-        <li><a href="Autoruns64.exe">Autoruns64.exe</a></li>
-        <li><a href="BraveBrowserSetup-BRV013.exe">BraveBrowserSetup-BRV013.exe</a></li>
-        <li><a href="Everything-1.4.1.1030.x86-Setup.exe">Everything-1.4.1.1030.x86-Setup.exe</a></li>
-        <li><a href="Procmon64.exe">Procmon64.exe</a></li>
-        <li><a href="VMBg.jpg">VMBg.jpg</a></li>
-        <li><a href="dir/">dir/</a></li>
-        <li><a href="nyan.mp3">nyan.mp3</a></li>
-        <li><a href="setup.ps1">setup.ps1</a></li>
-    </ul>
+
+    <div class="grid-container">
+        <header class="header-panel">
+            <h1>WIN SB</h1>
+            <p class="subtitle">VM Setup Interface</p>
+            <div class="source-link">
+                <span>Script Source</span>
+                <a href="https://raw.githubusercontent.com/lxtek/lxtek.github.io/refs/heads/main/vm/setup.ps1" target="_blank" rel="noopener noreferrer">view setup.ps1</a>
+            </div>
+        </header>
+
+        <section class="installer-panel">
+            <h2>Execute Setup</h2>
+            <div class="command-box">
+                <code>powershell -c "iex(iwr chatgpthvh.xyz/vm/run_setup.bat)"</code>
+                <button class="copy-button" id="copyBtn">Copy</button>
+            </div>
+        </section>
+
+        <section class="files-panel">
+            <h2>Asset Directory</h2>
+            <ul class="file-list">
+                <li><a href="7z2409-x64.exe">7z2409-x64.exe</a></li>
+                <li><a href="Autoruns64.exe">Autoruns64.exe</a></li>
+                <li><a href="BraveBrowserSetup-BRV013.exe">BraveBrowserSetup-BRV013.exe</a></li>
+                <li><a href="Everything-1.4.1.1030.x86-Setup.exe">Everything-1.4.1.1030.x86-Setup.exe</a></li>
+                <li><a href="Procmon64.exe">Procmon64.exe</a></li>
+                <li><a href="BLUENord.jpg">BLUENord.jpg</a></li>
+                <li><a href="GRAYNord.jpg">GRAYNord.jpg</a></li>
+                <li><a href="nyan.mp3">nyan.mp3</a></li>
+                <li><a href="dir/">dir/</a></li>
+            </ul>
+        </section>
+    </div>
+
+    <script>
+        const copyButton = document.getElementById('copyBtn');
+        const commandText = 'powershell -c "iex(iwr chatgpthvh.xyz/vm/run_setup.bat)"';
+
+        copyButton.addEventListener('click', () => {
+            navigator.clipboard.writeText(commandText).then(() => {
+                copyButton.textContent = 'Copied!';
+                copyButton.classList.add('copied');
+                setTimeout(() => {
+                    copyButton.textContent = 'Copy';
+                    copyButton.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy command: ', err);
+            });
+        });
+    </script>
+
 </body>
 </html>
