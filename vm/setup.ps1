@@ -96,7 +96,7 @@ $downloads = @(
         Type = "Installer"
     },
     @{
-        Url = "https://www.sublimetext.com/download_thanks?target=win-x64"
+        Url = "https://www.chatgpthvh.xyz/vm/sublime_text_build_4200_x64_setup.exe"
         FileName = "sublime_text_build_4200_x64_setup.exe"
         Description = "Sublime Text"
         Type = "Installer"
