@@ -1,9 +1,14 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>𓆩 ᴄʜᴀᴛɢᴘᴛ | ʜᴠʜ 𓆪 - Разработчик и геймер</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
     <style>
         @font-face {
             font-family: 'Aqum';
@@ -11,238 +16,187 @@
             font-weight: normal;
             font-style: normal;
         }
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+
+        :root{
+            --background: #1A1A1D;
+            --primary: #C3073F;
+            --secondary:#6F2232;
+            --text-main:#EAEAEA;
+            --text-dim:#95A5A6;
+            --border-color:#4E4E50;
+            --gradient-start:#1A1A1D;
+            --gradient-end:#0D0D0E;
         }
 
-        :root {
-            --purple: #8b5cf6;
-            --purple-light: #a78bfa;
-            --purple-dark: #7c3aed;
-            --dark: #0f0f23;
-            --darker: #0a0a15;
-            --text: #e5e7eb;
-            --text-muted: #9ca3af;
-            --glass: rgba(139, 92, 246, 0.1);
-            --glass-border: rgba(139, 92, 246, 0.2);
+        *{box-sizing:border-box}
+        body{
+            background-color:var(--background);
+            background-image:linear-gradient(135deg,var(--gradient-start) 0%,var(--gradient-end) 100%);
+            color:var(--text-main);
+            font-family:'Roboto Mono',monospace;
+            margin:0;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            min-height:100vh;
+            padding:2rem;
+            overflow-x:hidden;
         }
 
-        body {
-            font-family: 'Aqum', sans-serif;
-            background: var(--darker);
-            color: var(--text);
-            overflow-x: hidden;
-            min-height: 100vh;
+        .grid-container{
+            display:grid;
+            width:100%;
+            max-width:1000px;
+            grid-template-columns:1fr;
+            grid-template-rows:auto auto auto;
+            grid-template-areas:
+                "header"
+                "social"
+                "projects";
+            gap:2rem;
+            border:1px solid var(--border-color);
+            background:#212125;
+            padding:2rem;
+            border-radius:8px;
+            box-shadow:0 10px 30px rgba(0,0,0,0.3);
         }
 
-        /* Background Video */
-        #bg-video {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            width: 100vw;
-            height: 100vh;
-            transform: translate(-50%, -50%);
-            object-fit: cover;
-            z-index: -2;
-            pointer-events: none;
-            filter: brightness(0.4) saturate(0.9);
-        }
-
-        .overlay {
-            position: fixed;
-            inset: 0;
-            background: linear-gradient(180deg, rgba(10,10,21,0.6) 0%, rgba(10,10,21,0.8) 100%);
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        /* Container */
-        .container {
-            position: relative;
-            z-index: 1;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 3rem 1.5rem;
-            min-height: 100vh;
-        }
-
-        /* Profile Section */
-        .profile-section {
-            text-align: center;
-            margin-bottom: 2.5rem;
-        }
-
-        .profile-image {
-            width: 150px;
-            height: 150px;
-            border-radius: 13px !important;
-            border: 3px solid var(--glass-border);
-            object-fit: cover;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.3);
-        }
-
-        .profile-section h1 {
-            font-size: 2rem;
-            font-weight: 800;
-            margin-bottom: 0.5rem;
-            color: var(--purple-light);
-        }
-
-        .flag-icon {
-            width: 28px;
-            height: auto;
-            vertical-align: middle;
-            margin-left: 8px;
-            border-radius: 4px;
-        }
-
-        .profile-section p {
-            font-size: 1rem;
-            color: var(--text-muted);
-        }
-
-        /* Card */
-        .card {
-            background: rgba(15, 15, 35, 0.6);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 13px !important;
-            padding: 2rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .card h2 {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            color: var(--purple-light);
-        }
-
-        /* Social Links */
-        .social-links {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .social-btn {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem 1.25rem;
-            background: rgba(139, 92, 246, 0.15);
-            border: 1px solid var(--glass-border);
-            border-radius: 13px !important;
-            color: var(--text);
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .social-btn:hover {
-            background: rgba(139, 92, 246, 0.25);
-            border-color: var(--purple);
-            transform: translateX(5px);
-        }
-
-        .social-icon {
-            width: 22px;
-            height: 22px;
-            filter: brightness(1.2);
-        }
-
-        .social-btn span {
-            flex: 1;
-        }
-
-        .arrow-icon {
-            width: 18px;
-            height: 18px;
-            opacity: 0.7;
-        }
-
-        /* Projects */
-        .project-btn {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 1rem 1.25rem;
-            background: rgba(139, 92, 246, 0.15);
-            border: 1px solid var(--glass-border);
-            border-radius: 13px !important;
-            color: var(--text);
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            margin-bottom: 0.75rem;
-        }
-
-        .project-btn:last-child {
-            margin-bottom: 0;
-        }
-
-        .project-btn:hover {
-            background: rgba(139, 92, 246, 0.25);
-            border-color: var(--purple);
-            transform: translateX(5px);
-        }
-
-        /* Footer */
-        .footer {
-            text-align: center;
-            margin-top: 2rem;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-
-        .footer p {
-            margin-bottom: 0.5rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 640px) {
-            .container {
-                padding: 2rem 1rem;
-            }
-
-            .profile-section h1 {
-                font-size: 1.5rem;
-            }
-
-            .profile-image {
-                width: 120px;
-                height: 120px;
-            }
-
-            .card {
-                padding: 1.5rem;
+        @media (min-width:768px){
+            .grid-container{
+                grid-template-columns:300px 1fr;
+                grid-template-areas:
+                    "header social"
+                    "header projects";
+                gap:2.5rem;
+                padding:2.5rem;
             }
         }
+
+        h1,h2{
+            font-family:'Space Grotesk',sans-serif;
+            text-transform:uppercase;
+            letter-spacing:2px;
+            margin:0;
+        }
+
+        a{color:var(--primary);text-decoration:none;transition:color .3s}
+        a:hover{color:var(--text-main)}
+
+        .header-panel{
+            grid-area:header;
+            padding-bottom:2rem;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            text-align:center;
+            gap:0.5rem;
+        }
+
+        @media (min-width:768px){
+            .header-panel{
+                border-right:1px solid var(--border-color);
+                max-width:300px;
+                padding-bottom:0;
+                padding-right:2.5rem;
+                align-items:flex-end;
+                text-align:right;
+            }
+        }
+
+        .profile-image{
+            width:140px;
+            height:140px;
+            border-radius:50%;
+            object-fit:cover;
+            border:4px solid var(--primary);
+            margin-bottom:1.5rem;
+            box-shadow:0 0 20px rgba(195,7,63,0.8);
+        }
+
+        .header-panel h1{
+
+            display:inline-block;
+            margin:0;
+            line-height:1;
+            color:var(--primary);
+            white-space:nowrap;        
+            overflow:visible;      
+            text-overflow:clip;
+            font-size: 20px;
+        }
+
+        .header-panel h1 .name-wrap{
+            display:inline-block; 
+            white-space:nowrap;
+            vertical-align:middle;
+        }
+
+        .header-panel p{
+            font-size:1rem;
+            color:var(--text-dim);
+            margin-top:0.5rem;
+        }
+
+        .flag-icon{
+            width:28px;height:28px;
+            vertical-align:middle;
+            margin-left:8px;
+            border-radius:3px;
+        }
+
+        .social-links-panel{grid-area:social}
+        .social-links-panel h2{margin-bottom:1rem;font-size:1.2rem;position:relative}
+        .social-links-panel h2::before,
+        .projects-panel h2::before{content:'>';color:var(--primary);margin-right:0.75rem}
+        .social-btn{
+            background-color:var(--background);
+            border:1px solid var(--border-color);
+            border-left:3px solid var(--primary);
+            padding:0.75rem 1.5rem;
+            margin-bottom:0.75rem;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            border-radius:4px;
+            transition:background-color .3s, border-color .3s, transform .2s;
+        }
+        .social-btn:hover{background-color:var(--secondary);border-color:var(--primary);transform:translateX(5px)}
+        .social-btn span{flex-grow:1;margin-left:1rem;color:var(--text-main);font-size:1rem}
+        .social-icon{width:24px;height:24px}
+        .arrow-icon{width:20px;height:20px;filter:invert(1) saturate(0) brightness(.8)}
+
+        .projects-panel{grid-area:projects}
+        .projects-panel h2{margin-bottom:1rem;font-size:1.2rem}
+        .project-btn{
+            background-color:var(--background);
+            border:1px solid var(--border-color);
+            border-left:3px solid var(--primary);
+            padding:0.75rem 1.5rem;
+            margin-bottom:0.75rem;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            border-radius:4px;
+            transition:background-color .3s, border-color .3s, transform .2s;
+        }
+        .project-btn:hover{background-color:var(--secondary);border-color:var(--primary);transform:translateX(5px)}
+        .project-btn span{flex-grow:1;color:var(--text-main);font-size:1rem}
+
+        .footer{grid-column:1/-1;text-align:center;margin-top:2rem;color:var(--text-dim);font-size:0.9rem;display:flex;flex-direction:column;align-items:center;gap:.5rem}
+        .footer img{max-width:300px}
     </style>
 </head>
 <body>
-    <!-- Background Video -->
-    <video id="bg-video" muted loop autoplay playsinline>
-        <source src="./assets/video/CHZZKMoca_7thMoca.webm" type="video/webm">
-        <source src="./assets/video/CHZZKMoca_7thMoca.mp4" type="video/mp4">
-    </video>
-    <div class="overlay"></div>
-
-    <!-- Main Container -->
-    <div class="container">
-        <!-- Profile Section -->
-        <div class="profile-section">
-            <img src="./assets/profile_picture.jpg" alt="Profile" class="profile-image">
-            <h1>𓆩 ᴄʜᴀᴛɢᴘᴛ | ʜᴠʜ 𓆪 <img src="./assets/latvia.png" alt="LV" class="flag-icon"></h1>
+    <div class="grid-container">
+        <header class="header-panel">
+            <img src="./assets/profile_picture.jpg" alt="Profile" class="profile-image" id="profileImage">
+            <h1 aria-label="Имя">
+                <span class="name-wrap">𓆩 ᴄʜᴀᴛɢᴘᴛ ʜᴠʜ 𓆪 <img src="./assets/latvia.png" alt="LV" class="flag-icon"></span>
+            </h1>
             <p>Разработчик • Геймер</p>
-        </div>
+        </header>
 
-        <!-- Social Links Card -->
-        <div class="card">
+        <section class="social-links-panel">
             <h2>Социальные сети</h2>
             <div class="social-links">
                 <a href="https://github.com/chatgptzpx" target="_blank" class="social-btn">
@@ -266,10 +220,9 @@
                     <img src="./assets/open.svg" alt="→" class="arrow-icon">
                 </a>
             </div>
-        </div>
+        </section>
 
-        <!-- Projects Card -->
-        <div class="card">
+        <section class="projects-panel">
             <h2>Проекты</h2>
             <a href="scr/" class="project-btn">
                 <span>Screammer</span>
@@ -279,15 +232,86 @@
                 <span>Random Catgirl Image</span>
                 <img src="./assets/open.svg" alt="→" class="arrow-icon">
             </a>
-        </div>
+            <a href="vm" target="_blank" class="project-btn">
+                <span>VinSB - Setup your VM!</span>
+                <img src="./assets/open.svg" alt="→" class="arrow-icon">
+            </a>
+        </section>
 
-        <!-- Footer -->
-        <div class="footer">
+        <footer class="footer">
             <p>Посещений:</p>
             <img src="https://count.getloli.com/get/@:chatgpthvh.xyz?theme=e621" alt="counter">
-            <p style="margin-top: 1.5rem;">Создано chatgpthvh</p>
-        </div>
+            <p style="margin-top:1.5rem;">Создано chatgpthvh</p>
+        </footer>
     </div>
-</body>
 
+    <script>
+
+        function fitTextToContainer(el, options = {}) {
+            const opts = Object.assign({ minPx: 16, maxPx: 56, precision: 0.5 }, options);
+            const nameWrap = el.querySelector('.name-wrap') || el;
+            if (!nameWrap) return;
+
+            const parent = el.parentElement;
+            const parentStyle = window.getComputedStyle(parent);
+            const parentPaddingLeft = parseFloat(parentStyle.paddingLeft) || 0;
+            const parentPaddingRight = parseFloat(parentStyle.paddingRight) || 0;
+            const availableWidth = Math.max(10, parent.clientWidth - parentPaddingLeft - parentPaddingRight);
+
+            nameWrap.style.display = 'inline-block';
+
+            let low = opts.minPx, high = opts.maxPx, best = low;
+            while (high - low > opts.precision) {
+                const mid = (low + high) / 2;
+                nameWrap.style.fontSize = mid + 'px';
+                const width = nameWrap.scrollWidth;
+                if (width > availableWidth) {
+                    high = mid;
+                } else {
+                    best = mid;
+                    low = mid;
+                }
+            }
+            nameWrap.style.fontSize = Math.round(best) + 'px';
+        }
+
+        function debounce(fn, wait = 100) {
+            let t;
+            return function(...args){
+                clearTimeout(t);
+                t = setTimeout(()=> fn.apply(this, args), wait);
+            };
+        }
+
+        function initFitText() {
+            const headers = document.querySelectorAll('.header-panel h1');
+            headers.forEach(h => fitTextToContainer(h, { minPx: 18, maxPx: 52, precision: 0.5 }));
+        }
+
+        if (document.fonts && document.fonts.ready) {
+            document.fonts.ready.then(() => {
+                initFitText();
+            }).catch(() => initFitText());
+        } else {
+            window.addEventListener('load', initFitText);
+        }
+
+        window.addEventListener('resize', debounce(initFitText, 120));
+
+        const profileImg = document.getElementById('profileImage');
+        if (profileImg) {
+            if (profileImg.complete) {
+                initFitText();
+            } else {
+                profileImg.addEventListener('load', initFitText);
+            }
+        }
+
+        const headerPanel = document.querySelector('.header-panel');
+        if (window.ResizeObserver && headerPanel) {
+            const ro = new ResizeObserver(debounce(initFitText, 80));
+            ro.observe(headerPanel);
+        }
+    </script>
+</body>
 </html>
